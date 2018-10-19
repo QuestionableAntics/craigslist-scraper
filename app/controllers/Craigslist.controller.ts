@@ -5,12 +5,16 @@ const router: Router = Router();
 const craigslistScrapeService = new CraigslistScrapeService();
 
 router.get('/', async (req: Request, res: Response) => {
-    const query = req.query.search;
-     const results = await craigslistScrapeService.CardMetaData(query);
-    console.log(results);
+    const search = req.query.search;
+    try {
+        const results = await craigslistScrapeService.CardMetaData(search);
     
-     res.send(results);
-    // res.send(`You searched for ${results}`)
+        res.send(results);
+    } catch (e) {
+        console.log('controller', e);
+        
+    }
+    
 });
 
 export const CraigslistController: Router = router;

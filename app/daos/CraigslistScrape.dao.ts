@@ -6,8 +6,8 @@ import fs = require('fs');
 
 export default class CraigslistScrapeDao {
     baseUrl: string = "https://columbiamo.craigslist.org/"
-    async getSearchPage() {
-        const scrapedHtmlPromise = rp(this.baseUrl + "search/cta?query=honda+accord")
+    async getSearchPage(search: string) {
+        const scrapedHtmlPromise = rp(`${this.baseUrl}search/cta?query=${search}`)
             .then((html) => {
                 return html;
             })
@@ -19,11 +19,11 @@ export default class CraigslistScrapeDao {
         
     }
 
-    getCardMetaData() {
-        const pageHtml = this.getSearchPage();
-        pageHtml.then(html => {
+    async getCardMetaData(search: string) {
+        try {
+            const pageHtml = await this.getSearchPage(search);
             
-            const result = $('div .result-row', html).map((i, element) => {
+            const result = $('div .result-row', pageHtml).map((i, element) => {
                 const priceElement: any = $(element).find('.result-meta > .result-price')[0];
                 const price = priceElement ? priceElement.children[0].data : 'no price available';
                 
@@ -42,11 +42,12 @@ export default class CraigslistScrapeDao {
             });
 
             console.log(result);
-            
 
             return result;
+        } catch (e) {
+            console.log('dao', e);
+        }
             
-        })
     }
 
     
