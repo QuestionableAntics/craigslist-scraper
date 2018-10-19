@@ -4,6 +4,7 @@ export class CraigslistScrapeService {
     craigslistScrapeDao: CraigslistScrapeDao = new CraigslistScrapeDao();
 
     async CardMetaData(search: string, resultCount: number = 120) {
-        return await this.craigslistScrapeDao.getCardMetaData();
+        const results = await this.craigslistScrapeDao.getCardMetaData();
+        return results;
     }
 }

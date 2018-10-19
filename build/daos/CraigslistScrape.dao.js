@@ -76,6 +76,7 @@ var CraigslistScrapeDao = /** @class */ (function () {
                     yee: 'yee'
                 };
             });
+            console.log(result);
             return result;
         });
     };

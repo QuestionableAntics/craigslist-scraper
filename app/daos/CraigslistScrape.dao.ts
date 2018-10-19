@@ -41,6 +41,9 @@ export default class CraigslistScrapeDao {
                 
             });
 
+            console.log(result);
+            
+
             return result;
             
         })

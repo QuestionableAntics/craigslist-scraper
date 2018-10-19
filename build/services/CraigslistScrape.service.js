@@ -46,10 +46,13 @@ var CraigslistScrapeService = /** @class */ (function () {
     CraigslistScrapeService.prototype.CardMetaData = function (search, resultCount) {
         if (resultCount === void 0) { resultCount = 120; }
         return __awaiter(this, void 0, void 0, function () {
+            var results;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.craigslistScrapeDao.getCardMetaData()];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 1:
+                        results = _a.sent();
+                        return [2 /*return*/, results];
                 }
             });
         });
