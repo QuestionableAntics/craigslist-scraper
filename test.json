@@ -1,0 +1,123 @@
+{ type: "text",
+  data: "\n\n        ",
+  parent: { type: "tag",
+     name: "li",
+     namespace: "http: //www.w3.org/1999/xhtml",
+     attribs: { class: "result-row",
+        "data-pid": "6725499747",
+        "data-repost-of": "6675344837"
+        },
+     "x-attribsNamespace": { class: undefined,
+        "data-pid": undefined,
+        "data-repost-of": undefined
+        },
+     "x-attribsPrefix": { class: undefined,
+        "data-pid": undefined,
+        "data-repost-of": undefined
+        },
+     children: [
+            [Circular
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ]
+        ],
+     parent: { type: "tag",
+        name: "ul",
+        namespace: "http: //www.w3.org/1999/xhtml",
+        attribs: [Object
+            ],
+        "x-attribsNamespace": [Object
+            ],
+        "x-attribsPrefix": [Object
+            ],
+        children: [Array
+            ],
+        parent: [Object
+            ],
+        prev: [Object
+            ],
+        next: [Object
+            ]
+        },
+     prev: { type: "text",
+        data: "\n                             ",
+        parent: [Object
+            ],
+        prev: null,
+        next: [Circular
+            ]
+        },
+     next: { type: "text",
+        data: "\n         ",
+        parent: [Object
+            ],
+        prev: [Circular
+            ],
+        next: [Object
+            ]
+        }
+    },
+  prev: null,
+  next: { type: "tag",
+     name: "a",
+     namespace: "http: //www.w3.org/1999/xhtml",
+     attribs: { href:
+         "https: //columbiamo.craigslist.org/cto/d/2001-honda-accord-4dr/6725499747.html",
+        class: "result-image gallery",
+        "data-ids":
+         "1: 00303_4Gojy5QIuww,
+            1: 00f0f_hiYUigIjszV,
+            1: 00G0G_acDfYC5KkOD,
+            1: 00h0h_6FTGzCzQxtK,
+            1: 00K0K_b9iFWvBGL0B,
+            1: 00o0o_cz71o2i05ee"
+        },
+     "x-attribsNamespace": { href: undefined, class: undefined, "data-ids": undefined
+        },
+     "x-attribsPrefix": { href: undefined, class: undefined, "data-ids": undefined
+        },
+     children: [
+            [Object
+            ],
+            [Object
+            ],
+            [Object
+            ]
+        ],
+     parent: { type: "tag",
+        name: "li",
+        namespace: "http: //www.w3.org/1999/xhtml",
+        attribs: [Object
+            ],
+        "x-attribsNamespace": [Object
+            ],
+        "x-attribsPrefix": [Object
+            ],
+        children: [Array
+            ],
+        parent: [Object
+            ],
+        prev: [Object
+            ],
+        next: [Object
+            ]
+        },
+     prev: [Circular
+        ],
+     next: { type: "text",
+        data: "\n\n    ",
+        parent: [Object
+            ],
+        prev: [Circular
+            ],
+        next: [Object
+            ]
+        }
+    }
+}
