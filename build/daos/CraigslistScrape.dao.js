@@ -7,43 +7,44 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const $ = require("cheerio");
 const rp = require("request-promise");
+const craigslist_search_card_model_1 = __importDefault(require("../models/craigslist-search-card.model"));
 class CraigslistScrapeDao {
     constructor() {
         this.baseUrl = "https://columbiamo.craigslist.org/";
     }
     getSearchPage(search) {
         return __awaiter(this, void 0, void 0, function* () {
-            const scrapedHtmlPromise = rp(`${this.baseUrl}search/cta?query=${search}`)
-                .then((html) => {
-                return html;
-            })
-                .catch(e => {
-                console.log(e);
-            });
-            return yield scrapedHtmlPromise;
+            const scrapedHtml = yield rp(`${this.baseUrl}search/cta?query=${search}`);
+            return yield scrapedHtml;
         });
     }
     getCardMetaData(search) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const pageHtml = yield this.getSearchPage(search);
-                const result = $('div .result-row', pageHtml).map((i, element) => {
-                    const priceElement = $(element).find('.result-meta > .result-price')[0];
-                    const price = priceElement ? priceElement.children[0].data : 'no price available';
-                    const titleAndUrlElement = $(element).find('a.result-title')[0];
-                    const title = titleAndUrlElement.children[0].data;
-                    const url = titleAndUrlElement.attribs.href;
-                    return {
-                        price: price,
-                        title: title,
-                        url: url,
-                        yee: 'yee'
-                    };
-                });
-                console.log(result);
+                const resultRows = $('div .result-row', pageHtml);
+                const result = resultRows.map((i, element) => {
+                    try {
+                        const cardMetaData = new craigslist_search_card_model_1.default();
+                        const priceElement = $(element).find('.result-meta > .result-price');
+                        const titleAndUrlElement = $(element).find('a.result-title');
+                        cardMetaData.dataPid = element.attribs["data-pid"];
+                        cardMetaData.repostOf = element.attribs["data-repost-of"] || undefined;
+                        cardMetaData.price = priceElement.text() || cardMetaData.price;
+                        cardMetaData.title = titleAndUrlElement.text();
+                        cardMetaData.url = titleAndUrlElement.attr("href");
+                        return cardMetaData;
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                }).toArray();
                 return result;
             }
             catch (e) {

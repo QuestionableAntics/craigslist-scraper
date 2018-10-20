@@ -8,11 +8,9 @@ router.get('/', async (req: Request, res: Response) => {
     const search = req.query.search;
     try {
         const results = await craigslistScrapeService.CardMetaData(search);
-    
         res.send(results);
     } catch (e) {
         console.log('controller', e);
-        
     }
     
 });
