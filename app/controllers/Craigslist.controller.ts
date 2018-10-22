@@ -12,7 +12,6 @@ router.get('/', async (req: Request, res: Response) => {
     } catch (e) {
         console.log('controller', e);
     }
-    
 });
 
 export const CraigslistController: Router = router;

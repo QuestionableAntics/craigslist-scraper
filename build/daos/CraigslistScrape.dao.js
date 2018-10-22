@@ -16,18 +16,26 @@ const rp = require("request-promise");
 const craigslist_search_card_model_1 = __importDefault(require("../models/craigslist-search-card.model"));
 class CraigslistScrapeDao {
     constructor() {
+        this.craigslistUrl = "https://www.craigslist.org/about/sites";
         this.baseUrl = "https://columbiamo.craigslist.org/";
     }
     getSearchPage(search) {
         return __awaiter(this, void 0, void 0, function* () {
-            const scrapedHtml = yield rp(`${this.baseUrl}search/cta?query=${search}`);
-            return yield scrapedHtml;
+            const searchPageUrl = `${this.baseUrl}search/cta?query=${search}`;
+            return yield this.getPage(searchPageUrl);
         });
     }
-    getCardMetaData(search) {
+    getPage(pageUrl) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield rp(pageUrl);
+        });
+    }
+    getCardMetaData(search, cityUrl = this.baseUrl, resultCount = 120) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const pageHtml = yield this.getSearchPage(search);
+                const searchUrl = `${cityUrl}search/cta?query=${search}`;
+                // const pageHtml = await this.getSearchPage(search);
+                const pageHtml = yield this.getPage(searchUrl);
                 const resultRows = $('div .result-row', pageHtml);
                 const result = resultRows.map((i, element) => {
                     try {
@@ -50,6 +58,16 @@ class CraigslistScrapeDao {
             catch (e) {
                 console.log('dao', e);
             }
+        });
+    }
+    getCitiesFromState(state) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const pageHtml = yield this.getPage(this.craigslistUrl);
+            const stateHeader = $(`h4:contains('${state}')`, pageHtml);
+            const cityUL = stateHeader.next("ul");
+            const cityListElements = cityUL.children();
+            const cityUrls = cityListElements.map((i, element) => $(element).find('a').attr("href")).toArray();
+            return cityUrls;
         });
     }
 }

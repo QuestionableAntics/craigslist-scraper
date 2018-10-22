@@ -10,7 +10,8 @@ const app = express_1.default();
 const port = process.env.port || 3001;
 app.use('/craigslist', controllers_1.CraigslistController);
 const craigslistScrapeService = new CraigslistScrape_service_1.CraigslistScrapeService();
-const results = craigslistScrapeService.CardMetaData("Honda Accord");
+const results = craigslistScrapeService.CardMetaData("2010 Honda Accord");
+const otherResults = craigslistScrapeService.AveragePrice("2010 Honda Accord", "Missouri");
 app.listen(port, () => {
     console.log("listening, always listening...");
 });

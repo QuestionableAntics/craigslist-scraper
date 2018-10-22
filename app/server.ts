@@ -9,7 +9,10 @@ const port = process.env.port || 3001;
 
 app.use('/craigslist', CraigslistController);
 const craigslistScrapeService: CraigslistScrapeService = new CraigslistScrapeService();
-const results = craigslistScrapeService.CardMetaData("Honda Accord");
+const results = craigslistScrapeService.CardMetaData("2010 Honda Accord");
+const otherResults = craigslistScrapeService.AveragePrice("2010 Honda Accord", "Missouri");
+
+
 
 
 app.listen(port, () => {

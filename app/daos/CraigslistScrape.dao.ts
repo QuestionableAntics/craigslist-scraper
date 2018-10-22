@@ -6,16 +6,24 @@ import fs = require('fs');
 import CraigslistSearchCard from '../models/craigslist-search-card.model';
 
 export default class CraigslistScrapeDao {
+    craigslistUrl: string = "https://www.craigslist.org/about/sites";
     baseUrl: string = "https://columbiamo.craigslist.org/"
     async getSearchPage(search: string) {
-        const scrapedHtml = await rp(`${this.baseUrl}search/cta?query=${search}`);
-        return await scrapedHtml;
+        const searchPageUrl = `${this.baseUrl}search/cta?query=${search}`;
+        return await this.getPage(searchPageUrl);
+    }
+
+    async getPage(pageUrl: string) {
+        return await rp(pageUrl);
     }
 
 
-    async getCardMetaData(search: string) {
+    async getCardMetaData(search: string, cityUrl: string = this.baseUrl, resultCount: number = 120) {
         try {
-            const pageHtml = await this.getSearchPage(search);
+            const searchUrl = `${cityUrl}search/cta?query=${search}`;
+            // const pageHtml = await this.getSearchPage(search);
+            const pageHtml = await this.getPage(searchUrl);
+
             const resultRows = $('div .result-row', pageHtml);
 
             const result = resultRows.map((i, element) => {
@@ -41,5 +49,15 @@ export default class CraigslistScrapeDao {
         } catch (e) {
             console.log('dao', e);
         }
+    }
+
+    async getCitiesFromState(state: string) {
+        const pageHtml = await this.getPage(this.craigslistUrl);
+        const stateHeader = $(`h4:contains('${state}')`, pageHtml); 
+        const cityUL = stateHeader.next("ul")
+        const cityListElements = cityUL.children();
+        const cityUrls = cityListElements.map((i, element) => $(element).find('a').attr("href")).toArray();
+        
+        return cityUrls;
     }
 }
