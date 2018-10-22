@@ -30,14 +30,16 @@ class CraigslistScrapeService {
     AveragePrice(search, state = "Missouri") {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                // const state = "Missouri";
                 const cityUrls = yield this.craigslistScrapeDao.getCitiesFromState(state);
-                const cardMetaDataOfFirstPageListings = yield cityUrls.map((i, cityUrl) => __awaiter(this, void 0, void 0, function* () {
-                    console.log(cityUrl);
-                    const result = yield this.craigslistScrapeDao.getCardMetaData(search, cityUrl);
-                    return result;
-                }));
-                console.log(cardMetaDataOfFirstPageListings);
+                ;
+                const cardMetaDataOfFirstPageListings = yield Promise.all(cityUrls.map((cityUrl) => __awaiter(this, void 0, void 0, function* () { return yield this.craigslistScrapeDao.getCardMetaData(search, cityUrl.toString()); })));
+                const averagePrice = cardMetaDataOfFirstPageListings.map(cityListings => {
+                    if (cityListings) {
+                        cityListings.map((listing) => {
+                            // console.log(listing);
+                        });
+                    }
+                });
             }
             catch (e) {
                 console.log(e);

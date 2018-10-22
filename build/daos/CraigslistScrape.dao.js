@@ -52,7 +52,8 @@ class CraigslistScrapeDao {
                     catch (e) {
                         console.log(e);
                     }
-                }).toArray();
+                });
+                console.log(result.map(el => el.price));
                 return result;
             }
             catch (e) {
