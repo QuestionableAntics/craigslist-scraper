@@ -15,21 +15,36 @@ export class CraigslistScrapeService {
 
     async AveragePrice(search: string, state: string = "Missouri") {
         try {
-            const cityUrls = await this.craigslistScrapeDao.getCitiesFromState(state);;
+            let result = null;
+            const cityUrls = await this.craigslistScrapeDao.getCitiesFromState(state);
+            const queries = search.split(' ').map(query => query.toLowerCase());
+            console.log(queries);
             
             const cardMetaDataOfFirstPageListings = await Promise.all(
                 cityUrls.map(async cityUrl => await this.craigslistScrapeDao.getCardMetaData(search, cityUrl.toString())));
             
-            const averagePrice = cardMetaDataOfFirstPageListings.map(cityListings => {
+            const cityPriceArrays = cardMetaDataOfFirstPageListings.map(cityListings => {
                 if (cityListings) {
-                    cityListings.map((listing) => {
-                        // console.log(listing);
-                        
+                    const priceArray = cityListings.map(listing => {
+                        const containsSearchKeywords = queries.every(query => listing.title.toLowerCase().indexOf(query) > -1);
+                        if (containsSearchKeywords && listing.price[0] === '$') {
+                            return Number.parseInt(listing.price.slice(1, listing.price.length));
+                        }
                     });
+                    const priceArrayFiltered = priceArray.filter(price => price && price > 500 && price < 100000);
+                    return priceArrayFiltered;
                 }
-                          
-            })
-            
+            });
+            const priceArrayFilteredFlattened = [].concat.apply([], cityPriceArrays) as Array<number>;
+
+            if (priceArrayFilteredFlattened.length > 1) {
+                const priceSum = priceArrayFilteredFlattened.reduce((total, num) => total + num);
+                const averagePrice = priceSum / priceArrayFilteredFlattened.length;
+                result = {AveragePrice: averagePrice};
+            } else {
+                result = {AveragePrice: 'No items found for this search'};
+            }
+            return result;
         } catch (e) {
             console.log(e);
             

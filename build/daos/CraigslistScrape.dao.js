@@ -19,12 +19,6 @@ class CraigslistScrapeDao {
         this.craigslistUrl = "https://www.craigslist.org/about/sites";
         this.baseUrl = "https://columbiamo.craigslist.org/";
     }
-    getSearchPage(search) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const searchPageUrl = `${this.baseUrl}search/cta?query=${search}`;
-            return yield this.getPage(searchPageUrl);
-        });
-    }
     getPage(pageUrl) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield rp(pageUrl);
@@ -52,8 +46,7 @@ class CraigslistScrapeDao {
                     catch (e) {
                         console.log(e);
                     }
-                });
-                console.log(result.map(el => el.price));
+                }).get();
                 return result;
             }
             catch (e) {

@@ -22,4 +22,15 @@ router.get('/', (req, res) => __awaiter(this, void 0, void 0, function* () {
         console.log('controller', e);
     }
 }));
+router.get('/AveragePrice', (req, res) => __awaiter(this, void 0, void 0, function* () {
+    const search = req.query.search;
+    const state = req.query.state.toLowerCase().charAt(0).toUpperCase() + req.query.state.slice(1);
+    try {
+        const results = yield craigslistScrapeService.AveragePrice(search, state);
+        res.send(results);
+    }
+    catch (e) {
+        console.log('controller', e);
+    }
+}));
 exports.CraigslistController = router;

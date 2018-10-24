@@ -8,15 +8,10 @@ import CraigslistSearchCard from '../models/craigslist-search-card.model';
 export default class CraigslistScrapeDao {
     craigslistUrl: string = "https://www.craigslist.org/about/sites";
     baseUrl: string = "https://columbiamo.craigslist.org/"
-    async getSearchPage(search: string) {
-        const searchPageUrl = `${this.baseUrl}search/cta?query=${search}`;
-        return await this.getPage(searchPageUrl);
-    }
 
     async getPage(pageUrl: string) {
         return await rp(pageUrl);
     }
-
 
     async getCardMetaData(search: string, cityUrl: string = this.baseUrl, resultCount: number = 120) {
         try {
@@ -26,7 +21,7 @@ export default class CraigslistScrapeDao {
 
             const resultRows = $('div .result-row', pageHtml);
 
-            const result = resultRows.map((i, element) => {
+            const result: CraigslistSearchCard[] = resultRows.map((i, element) => {
                 try {
                     const cardMetaData: CraigslistSearchCard = new CraigslistSearchCard();
                     const priceElement: any = $(element).find('.result-meta > .result-price');
@@ -43,8 +38,7 @@ export default class CraigslistScrapeDao {
                 } catch (e) {
                     console.log(e);
                 }
-            });
-            console.log(result.map(el => el.price));
+            }).get() as any as CraigslistSearchCard[];
             
             return result;
         } catch (e) {
