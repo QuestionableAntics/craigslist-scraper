@@ -13,7 +13,17 @@ export class CraigslistScrapeService {
         }
     }
 
-    async AveragePrice(search: string, state: string = "Missouri") {
+    async AveragePrice(search: string) {
+        try {
+            let result = null;
+            const states = this.craigslistScrapeDao.getAllStates();
+            const queries = search.split(' ').map(query => query.toLowerCase());
+        } catch (e) {
+            console.log('service', e);
+        }
+    }
+
+    async AveragePriceForState(search: string, state: string = "Missouri") {
         try {
             let result = null;
             const cityUrls = await this.craigslistScrapeDao.getCitiesFromState(state);
@@ -40,7 +50,7 @@ export class CraigslistScrapeService {
             if (priceArrayFilteredFlattened.length > 1) {
                 const priceSum = priceArrayFilteredFlattened.reduce((total, num) => total + num);
                 const averagePrice = priceSum / priceArrayFilteredFlattened.length;
-                result = {AveragePrice: averagePrice};
+                result = {AveragePrice: averagePrice, TotalPosts: priceArrayFilteredFlattened.length};
             } else {
                 result = {AveragePrice: 'No items found for this search'};
             }

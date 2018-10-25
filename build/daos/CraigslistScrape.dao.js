@@ -64,5 +64,14 @@ class CraigslistScrapeDao {
             return cityUrls;
         });
     }
+    getAllStates() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const pageHtml = yield this.getPage(this.craigslistUrl);
+            const stateColumns = $('h1', pageHtml).nextUntil('h1')[0];
+            const stateHeaders = $(stateColumns).find('h4');
+            const states = stateHeaders.map((i, element) => $(element).text()).toArray();
+            return states;
+        });
+    }
 }
 exports.default = CraigslistScrapeDao;

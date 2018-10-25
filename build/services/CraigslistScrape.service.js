@@ -27,7 +27,19 @@ class CraigslistScrapeService {
             }
         });
     }
-    AveragePrice(search, state = "Missouri") {
+    AveragePrice(search) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                let result = null;
+                const states = this.craigslistScrapeDao.getAllStates();
+                const queries = search.split(' ').map(query => query.toLowerCase());
+            }
+            catch (e) {
+                console.log('service', e);
+            }
+        });
+    }
+    AveragePriceForState(search, state = "Missouri") {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let result = null;
@@ -51,7 +63,7 @@ class CraigslistScrapeService {
                 if (priceArrayFilteredFlattened.length > 1) {
                     const priceSum = priceArrayFilteredFlattened.reduce((total, num) => total + num);
                     const averagePrice = priceSum / priceArrayFilteredFlattened.length;
-                    result = { AveragePrice: averagePrice };
+                    result = { AveragePrice: averagePrice, TotalPosts: priceArrayFilteredFlattened.length };
                 }
                 else {
                     result = { AveragePrice: 'No items found for this search' };

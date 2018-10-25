@@ -55,4 +55,13 @@ export default class CraigslistScrapeDao {
         
         return cityUrls;
     }
+
+    async getAllStates() {
+        const pageHtml = await this.getPage(this.craigslistUrl);
+        const stateColumns = $('h1', pageHtml).nextUntil('h1')[0];
+        const stateHeaders = $(stateColumns).find('h4');
+        const states = stateHeaders.map((i, element) => $(element).text()).toArray();
+        
+        return states;
+    }
 }
