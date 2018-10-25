@@ -16,8 +16,10 @@ export class CraigslistScrapeService {
     async AveragePrice(search: string) {
         try {
             let result = null;
-            const states = this.craigslistScrapeDao.getAllStates();
+            const states = await this.craigslistScrapeDao.getAllStates();
             const queries = search.split(' ').map(query => query.toLowerCase());
+            const allStatesFirstPageListingsCardMetaData = await Promise.all(states.map(state => this.AveragePriceForState(search, state)));
+            // console.log(allStatesFirstPageListingsCardMetaData);
         } catch (e) {
             console.log('service', e);
         }
@@ -56,8 +58,7 @@ export class CraigslistScrapeService {
             }
             return result;
         } catch (e) {
-            console.log(e);
-            
+            console.log('CraigslistScrapeService.averagePriceForState', e);
         }
     }
 }

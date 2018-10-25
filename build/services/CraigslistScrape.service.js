@@ -31,8 +31,10 @@ class CraigslistScrapeService {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let result = null;
-                const states = this.craigslistScrapeDao.getAllStates();
+                const states = yield this.craigslistScrapeDao.getAllStates();
                 const queries = search.split(' ').map(query => query.toLowerCase());
+                const allStatesFirstPageListingsCardMetaData = yield Promise.all(states.map(state => this.AveragePriceForState(search, state)));
+                // console.log(allStatesFirstPageListingsCardMetaData);
             }
             catch (e) {
                 console.log('service', e);
@@ -71,7 +73,7 @@ class CraigslistScrapeService {
                 return result;
             }
             catch (e) {
-                console.log(e);
+                console.log('CraigslistScrapeService.averagePriceForState', e);
             }
         });
     }

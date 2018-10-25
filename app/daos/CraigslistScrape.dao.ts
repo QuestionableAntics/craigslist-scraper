@@ -36,13 +36,13 @@ export default class CraigslistScrapeDao {
                     
                     return cardMetaData;
                 } catch (e) {
-                    console.log(e);
+                    console.log('Error filling out card metadata', e);
                 }
             }).get() as any as CraigslistSearchCard[];
             
             return result;
         } catch (e) {
-            console.log('dao', e);
+            console.log('craigslistscrapedao.getcardmetadata', e);
         }
     }
 
@@ -60,8 +60,8 @@ export default class CraigslistScrapeDao {
         const pageHtml = await this.getPage(this.craigslistUrl);
         const stateColumns = $('h1', pageHtml).nextUntil('h1')[0];
         const stateHeaders = $(stateColumns).find('h4');
-        const states = stateHeaders.map((i, element) => $(element).text()).toArray();
-        
+        const states = stateHeaders.map((i, element) => $(element).text()).get();
+
         return states;
     }
 }
