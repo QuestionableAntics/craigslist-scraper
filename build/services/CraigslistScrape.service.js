@@ -34,10 +34,19 @@ class CraigslistScrapeService {
                 const states = yield this.craigslistScrapeDao.getAllStates();
                 const queries = search.split(' ').map(query => query.toLowerCase());
                 const allStatesFirstPageListingsCardMetaData = yield Promise.all(states.map(state => this.AveragePriceForState(search, state)));
-                // console.log(allStatesFirstPageListingsCardMetaData);
+                const allStatesTotal = allStatesFirstPageListingsCardMetaData.reduce((acc, curr) => {
+                    if (curr && curr.AveragePrice && curr.TotalPosts) {
+                        acc.Total += curr.AveragePrice * curr.TotalPosts;
+                        acc.TotalPosts += curr.TotalPosts;
+                    }
+                    return acc;
+                }, { Total: 0, TotalPosts: 0 });
+                const allStatesAverage = { AveragePrice: allStatesTotal.Total / allStatesTotal.TotalPosts, TotalPosts: allStatesTotal.TotalPosts };
+                console.log(allStatesAverage);
+                return allStatesAverage;
             }
             catch (e) {
-                console.log('service', e);
+                console.log('craigslistscrapeservice.averageprice \n\n', e);
             }
         });
     }
@@ -47,7 +56,7 @@ class CraigslistScrapeService {
                 let result = null;
                 const cityUrls = yield this.craigslistScrapeDao.getCitiesFromState(state);
                 const queries = search.split(' ').map(query => query.toLowerCase());
-                console.log(queries);
+                // console.log(queries);
                 const cardMetaDataOfFirstPageListings = yield Promise.all(cityUrls.map((cityUrl) => __awaiter(this, void 0, void 0, function* () { return yield this.craigslistScrapeDao.getCardMetaData(search, cityUrl.toString()); })));
                 const cityPriceArrays = cardMetaDataOfFirstPageListings.map(cityListings => {
                     if (cityListings) {
@@ -68,7 +77,7 @@ class CraigslistScrapeService {
                     result = { AveragePrice: averagePrice, TotalPosts: priceArrayFilteredFlattened.length };
                 }
                 else {
-                    result = { AveragePrice: 'No items found for this search' };
+                    result = { AveragePrice: 0, TotalPosts: 0 };
                 }
                 return result;
             }

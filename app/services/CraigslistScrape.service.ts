@@ -19,9 +19,18 @@ export class CraigslistScrapeService {
             const states = await this.craigslistScrapeDao.getAllStates();
             const queries = search.split(' ').map(query => query.toLowerCase());
             const allStatesFirstPageListingsCardMetaData = await Promise.all(states.map(state => this.AveragePriceForState(search, state)));
-            // console.log(allStatesFirstPageListingsCardMetaData);
+            const allStatesTotal = allStatesFirstPageListingsCardMetaData.reduce((acc, curr) => {
+                if (curr && curr.AveragePrice && curr.TotalPosts) {
+                    acc.Total += curr.AveragePrice * curr.TotalPosts;
+                    acc.TotalPosts += curr.TotalPosts;
+                }
+                return acc;
+            }, {Total: 0, TotalPosts: 0});
+            const allStatesAverage = {AveragePrice: allStatesTotal.Total/allStatesTotal.TotalPosts, TotalPosts: allStatesTotal.TotalPosts};
+            console.log(allStatesAverage);
+            return allStatesAverage;
         } catch (e) {
-            console.log('service', e);
+            console.log('craigslistscrapeservice.averageprice \n\n', e);
         }
     }
 
@@ -30,7 +39,7 @@ export class CraigslistScrapeService {
             let result = null;
             const cityUrls = await this.craigslistScrapeDao.getCitiesFromState(state);
             const queries = search.split(' ').map(query => query.toLowerCase());
-            console.log(queries);
+            // console.log(queries);
             
             const cardMetaDataOfFirstPageListings = await Promise.all(
                 cityUrls.map(async cityUrl => await this.craigslistScrapeDao.getCardMetaData(search, cityUrl.toString())));
@@ -54,7 +63,7 @@ export class CraigslistScrapeService {
                 const averagePrice = priceSum / priceArrayFilteredFlattened.length;
                 result = {AveragePrice: averagePrice, TotalPosts: priceArrayFilteredFlattened.length};
             } else {
-                result = {AveragePrice: 'No items found for this search'};
+                result = {AveragePrice: 0, TotalPosts: 0};
             }
             return result;
         } catch (e) {

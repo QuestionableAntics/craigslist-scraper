@@ -44,14 +44,21 @@ class CraigslistScrapeDao {
                         return cardMetaData;
                     }
                     catch (e) {
-                        console.log('Error filling out card metadata', e);
+                        console.log('Error filling out card metadata \n\n', e);
                     }
                 }).get();
                 return result;
             }
             catch (e) {
-                console.log('craigslistscrapedao.getcardmetadata', e);
+                console.log('craigslistscrapedao.getcardmetadata \n\n', e);
             }
+        });
+    }
+    getAllCities() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const states = yield this.getAllStates();
+            const cityUrls = states.map(state => this.getCitiesFromState(state));
+            return cityUrls;
         });
     }
     getCitiesFromState(state) {
@@ -60,8 +67,9 @@ class CraigslistScrapeDao {
             const stateHeader = $(`h4:contains('${state}')`, pageHtml);
             const cityUL = stateHeader.next("ul");
             const cityListElements = cityUL.children();
-            const cityUrls = cityListElements.map((i, element) => $(element).find('a').attr("href")).toArray();
-            return cityUrls;
+            const cityUrls = cityListElements.map((i, element) => $(element).find('a').attr("href")).get();
+            const httpsCityUrls = cityUrls.filter(cityUrl => cityUrl.indexOf('https') > -1);
+            return httpsCityUrls;
         });
     }
     getAllStates() {

@@ -36,14 +36,20 @@ export default class CraigslistScrapeDao {
                     
                     return cardMetaData;
                 } catch (e) {
-                    console.log('Error filling out card metadata', e);
+                    console.log('Error filling out card metadata \n\n', e);
                 }
             }).get() as any as CraigslistSearchCard[];
             
             return result;
         } catch (e) {
-            console.log('craigslistscrapedao.getcardmetadata', e);
+            console.log('craigslistscrapedao.getcardmetadata \n\n', e);
         }
+    }
+
+    async getAllCities() {
+        const states = await this.getAllStates();
+        const cityUrls = states.map(state => this.getCitiesFromState(state));
+        return cityUrls;
     }
 
     async getCitiesFromState(state: string) {
@@ -51,9 +57,10 @@ export default class CraigslistScrapeDao {
         const stateHeader = $(`h4:contains('${state}')`, pageHtml); 
         const cityUL = stateHeader.next("ul")
         const cityListElements = cityUL.children();
-        const cityUrls = cityListElements.map((i, element) => $(element).find('a').attr("href")).toArray();
+        const cityUrls = cityListElements.map((i, element) => $(element).find('a').attr("href")).get();
+        const httpsCityUrls = cityUrls.filter(cityUrl => cityUrl.indexOf('https') > -1);
         
-        return cityUrls;
+        return httpsCityUrls;
     }
 
     async getAllStates() {
